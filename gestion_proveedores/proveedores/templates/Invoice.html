@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
+{% block content %}
 <body class="bg-gray-50">
     <div class="min-h-screen">
         <!-- Header -->
@@ -14,9 +15,11 @@
             <div class="container mx-auto px-4 py-4">
                 <div class="flex justify-between items-center">
                     <div class="flex items-center space-x-4">
-                        <button class="text-gray-600 hover:text-gray-900">
-                            <i class="fas fa-arrow-left text-xl"></i>
-                        </button>
+                        <a href="{% url 'proveedores:proveedores' %}" class="block"> 
+                            <button class="text-gray-600 hover:text-gray-900">
+                                <i class="fas fa-arrow-left text-xl"></i>
+                            </button> 
+                        </a>
                         <h1 class="text-2xl font-bold">Facturas</h1>
                     </div>
                     <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2">
@@ -56,63 +59,40 @@
                                 <th class="px-4 py-4 text-left text-sm font-medium text-gray-600">ID</th>
                                 <th class="px-4 py-4 text-left text-sm font-medium text-gray-600">Nº Factura</th>
                                 <th class="px-4 py-4 text-left text-sm font-medium text-gray-600">Fecha</th>
-                                <th class="px-4 py-4 text-left text-sm font-medium text-gray-600">Cliente</th>
+                                <th class="px-4 py-4 text-left text-sm font-medium text-gray-600">Comprador</th>
                                 <th class="px-4 py-4 text-left text-sm font-medium text-gray-600">Electrónica</th>
-                                <th class="px-4 py-4 text-left text-sm font-medium text-gray-600">Estado</th>
+                               
                                 <th class="px-4 py-4 text-right text-sm font-medium text-gray-600">Acciones</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-200">
-                            <!-- Ejemplo de fila -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-4 text-sm text-gray-900">#4536789</td>
-                                <td class="px-4 py-4 text-sm text-gray-900">FAC-001</td>
-                                <td class="px-4 py-4 text-sm text-gray-900">22 Jun, 2024</td>
-                                <td class="px-4 py-4 text-sm text-gray-900">Cliente Ejemplo S.A.</td>
-                                <td class="px-4 py-4 text-sm">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        Sí
-                                    </span>
-                                </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        Pagada
-                                    </span>
-                                </td>
-                                <td class="px-4 py-4 text-sm text-right">
-                                    <button class="text-blue-600 hover:text-blue-800 mx-1">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-800 mx-1">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                            <!-- Más filas de ejemplo -->
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-4 text-sm text-gray-900">#4536790</td>
-                                <td class="px-4 py-4 text-sm text-gray-900">FAC-002</td>
-                                <td class="px-4 py-4 text-sm text-gray-900">22 Jun, 2024</td>
-                                <td class="px-4 py-4 text-sm text-gray-900">Empresa ABC Ltda.</td>
-                                <td class="px-4 py-4 text-sm">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
-                                        No
-                                    </span>
-                                </td>
-                                <td class="px-4 py-4 text-sm">
-                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
-                                        Pendiente
-                                    </span>
-                                </td>
-                                <td class="px-4 py-4 text-sm text-right">
-                                    <button class="text-blue-600 hover:text-blue-800 mx-1">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="text-red-600 hover:text-red-800 mx-1">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                           
+                             {% for invoice in invoices %}
+                            
+                                <tr class="hover:bg-gray-50 cursor-pointer" >
+
+
+                               
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.id}}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.invoice_number}}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.invoice_date}}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.customer}}</td>
+                                    <td class="px-4 py-4 text-sm">
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                            {{invoice.status_electronics}}
+                                        </span>
+                                    </td>
+                                    
+                                   
+                                    <td class="px-4 py-4 text-sm text-right">
+                                        <a href="{% url 'proveedores:invoice' invoice.id %}" 
+                                           class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                            <i class="fas fa-info-circle mr-2"></i> Detalle
+                                        </a>
+                                    </td>
+                                </tr>
+                            
+                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
@@ -168,26 +148,46 @@
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <form class="space-y-4">
+                <form id="editForm" method="POST" action="{% url 'proveedores:saveInvoice' supplier.id %}" enctype="multipart/form-data" class="space-y-4">
+                    {% csrf_token %}
                     <div>
                         <label class="block text-sm font-medium mb-1">Número de Factura</label>
-                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium mb-1">Cliente</label>
-                        <input type="text" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" name="invoice_number" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Fecha</label>
-                        <input type="date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="date"name="invoice_date" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Cantidad</label>
+                        <input type="number" name="amount"  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="$0">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Cliente</label>
+                        <select name="customer" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            
+                            {% for customer in customers %}
+                                <option value="{{ customer.id }}">
+                                    {{ customer.first_name }} {{ customer.last_name }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Imagen de Factura</label>
+                        <input type="file" name="image" accept="image/*" required class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+                        <p class="text-xs text-gray-500 mt-1">Este campo es obligatorio.</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium mb-1">Factura Electrónica</label>
-                        <select class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="1">Sí</option>
-                            <option value="0">No</option>
+                        <select name="status_electronics" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="True">Sí</option>
+                            <option value="False">No</option>
                         </select>
                     </div>
+
+
+
                     <div class="flex justify-end space-x-3">
                         <button type="button" onclick="closeModal()" class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                             Cancelar
@@ -202,6 +202,7 @@
     </div>
 
     <script>
+
         function openModal() {
             document.getElementById('invoiceModal').classList.remove('hidden');
             document.getElementById('invoiceModal').classList.add('flex');
@@ -223,4 +224,6 @@
         });
     </script>
 </body>
+{% endblock %}
+
 </html>

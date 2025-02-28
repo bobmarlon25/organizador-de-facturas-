@@ -21,7 +21,7 @@
                 <!-- Enlaces de Navegación (Desktop) -->
                 <nav class="hidden md:flex items-center space-x-6">
                     <a href="/" class="text-sm font-medium text-gray-700 hover:text-blue-600">Inicio</a>
-                    <a href="/proveedores" class="text-sm font-medium text-gray-700 hover:text-blue-600">Proveedores</a>
+                    <a href="{% url 'proveedores:proveedores' %}" class="text-sm font-medium text-gray-700 hover:text-blue-600">Proveedores</a>
                     <a href="/clientes" class="text-sm font-medium text-gray-700 hover:text-blue-600">Clientes</a>
                 </nav>
 
@@ -35,7 +35,7 @@
             <div class="hidden md:hidden" id="mobileMenu">
                 <nav class="py-3 space-y-2">
                     <a href="/" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg">Inicio</a>
-                    <a href="/proveedores" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg">Proveedores</a>
+                    <a href="{% url 'proveedores:proveedores' %}" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg">Proveedores</a>
                     <a href="/clientes" class="block px-4 py-2 text-sm hover:bg-gray-100 rounded-lg">Clientes</a>
                 </nav>
             </div>
