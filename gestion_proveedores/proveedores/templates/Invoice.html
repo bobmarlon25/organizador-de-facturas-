@@ -67,25 +67,25 @@
                         </thead>
                         <tbody class="divide-y divide-gray-200">
                            
-                             {% for invoice in invoices %}
+                             {% for page in page %}
                             
                                 <tr class="hover:bg-gray-50 cursor-pointer" >
 
 
                                
-                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.id}}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.invoice_number}}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.invoice_date}}</td>
-                                    <td class="px-4 py-4 text-sm text-gray-900">{{invoice.customer}}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{page.id}}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{page.invoice_number}}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{page.invoice_date}}</td>
+                                    <td class="px-4 py-4 text-sm text-gray-900">{{page.customer}}</td>
                                     <td class="px-4 py-4 text-sm">
                                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                            {{invoice.status_electronics}}
+                                            {{page.status_electronics}}
                                         </span>
                                     </td>
                                     
                                    
                                     <td class="px-4 py-4 text-sm text-right">
-                                        <a href="{% url 'proveedores:invoice' invoice.id %}" 
+                                        <a href="{% url 'proveedores:invoice' page.id %}" 
                                            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
                                             <i class="fas fa-info-circle mr-2"></i> Detalle
                                         </a>
@@ -97,48 +97,65 @@
                     </table>
                 </div>
 
-                <!-- Pagination -->
+          
                 <div class="px-4 py-3 border-t border-gray-200 flex items-center justify-between">
                     <div class="flex-1 flex justify-between sm:hidden">
-                        <button class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50">
-                            Anterior
-                        </button>
-                        <button class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50">
-                            Siguiente
-                        </button>
+                        {% if page.has_previous %}
+                            <a href="?page={{ page.previous_page_number }}" class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50">
+                                Anterior
+                            </a>
+                        {% endif %}
+                        {% if page.has_next %}
+                            <a href="?page={{ page.next_page_number }}" class="px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50">
+                                Siguiente
+                            </a>
+                        {% endif %}
                     </div>
+                
                     <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
                         <div>
                             <p class="text-sm text-gray-700">
-                                Mostrando <span class="font-medium">1</span> a <span class="font-medium">10</span> de <span class="font-medium">20</span> resultados
+                                Mostrando <span class="font-medium">{{ page.start_index }}</span> a 
+                                <span class="font-medium">{{ page.end_index }}</span> de 
+                                <span class="font-medium">{{ page.paginator.count }}</span> resultados
                             </p>
                         </div>
+                
                         <div>
                             <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                                <button class="relative inline-flex items-center px-2 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <i class="fas fa-chevron-left"></i>
-                                </button>
-                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    1
-                                </button>
-                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    2
-                                </button>
-                                <button class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
-                                    3
-                                </button>
-                                <button class="relative inline-flex items-center px-2 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                                    <i class="fas fa-chevron-right"></i>
-                                </button>
+                                {% if page.has_previous %}
+                                    <a href="?page={{ page.previous_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-l-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </a>
+                                {% endif %}
+                
+                                {% for num in page.paginator.page_range %}
+                                    {% if num == page.number %}
+                                        <span class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-gray-200 text-sm font-medium text-gray-700">
+                                            {{ num }}
+                                        </span>
+                                    {% else %}
+                                        <a href="?page={{ num }}" class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50">
+                                            {{ num }}
+                                        </a>
+                                    {% endif %}
+                                {% endfor %}
+                
+                                {% if page.has_next %}
+                                    <a href="?page={{ page.next_page_number }}" class="relative inline-flex items-center px-2 py-2 rounded-r-lg border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+                                        <i class="fas fa-chevron-right"></i>
+                                    </a>
+                                {% endif %}
                             </nav>
                         </div>
                     </div>
                 </div>
+                
             </div>
         </main>
     </div>
 
-    <!-- Modal para Nueva/Editar Factura -->
+    <!-- Modal para Nueva -->
     <div id="invoiceModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
         <div class="bg-white rounded-lg max-w-md w-full mx-4">
             <div class="p-6">

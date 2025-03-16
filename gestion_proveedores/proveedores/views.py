@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Customer,Supplier,Invoice
-
+from django.core.paginator import Paginator
 
 #supplier= provedores
 def index(request):
@@ -21,21 +21,29 @@ def supplier_list(request):
 def supplier_info(request, supplier_id):
     # Intentar obtener el proveedor
     supplier = Supplier.objects.get(id=supplier_id)
+    
 
     if not supplier:
         # Si el proveedor no existe, renderizar una página de error personalizada
         return render(request, 'error.html', {'message': 'El proveedor no existe.'}, status=404)
 
     # Obtener todas las facturas asociadas a ese proveedor
-    invoices = Invoice.objects.filter(supplier=supplier)
+    invoices = Invoice.objects.filter(supplier=supplier).order_by('id')  # Orden ascendente por ID
+    paginated = Paginator(invoices, 2)
+    page_number = request.GET.get('page') #Get the requested page number from the URL
+    
+    page_invoices = paginated.get_page(page_number)
+
+
+
     customer=Customer.objects.all()
     
 
     # Pasar los datos al template
     context = {
-        'supplier': supplier,
-        'invoices': invoices,
-        'customers': customer
+        'supplier':supplier,
+        'page':page_invoices,
+        'customers': customer,
     }
 
     return render(request, 'Invoice.html', context)
@@ -171,3 +179,40 @@ def SaveInvoice(request,supplier_id):
         
     # Si es GET, redirigir a la página de detalle
     return redirect('proveedores:proveedor', supplier_id=supplier.id)
+
+
+def SaveSupplier(request):
+    
+    if request.method == 'POST':
+        # Obtener datos del formulario
+        company=request.POST['company']
+        first_name = request.POST['first_name']
+        description = request.POST['description']
+        address=request.POST['address']
+        phone=request.POST['phone']
+        email=request.POST['email']
+
+        logo=request.FILES['image']
+        # Actualizar la factura
+        
+        supplier=Supplier()
+        supplier.company=company
+        supplier.first_name = first_name
+        supplier.description = description
+        supplier.address=address
+        supplier.phone=phone
+        supplier.email=email
+        supplier.logo=logo
+
+        # Manejar la carga de la nueva imagen
+        
+            
+        
+        
+        supplier.save()
+        
+        
+        
+    
+    return redirect('proveedores:proveedores')
+ 
